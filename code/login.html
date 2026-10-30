@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Log In | Spotlight</title>
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+    <header class="auth-header">
+        <a href="index.html" class="logo">spotlight<span>.</span></a>
+        <a href="register.html" class="header-link">Don't have an account? Join now</a>
+    </header>
+
+<main class="auth-container">
+    <section class="auth-card">
+        <div class="auth-heading">
+            <span class="eyebrow">WELCOME BACK</span>
+            <h1>Welcome to <span>Spotlight.</span></h1>
+            <p>Log in to continue your journey.</p>
+        </div>
+
+        <form id="loginForm">
+            <label for="email">Email address</label>
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="you@example.com"
+                autocomplete="email"
+                required
+            >
+
+            <label for="password">Password</label>
+            <div class="password-wrapper">
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
+                >
+                <button
+                    type="button"
+                    class="password-toggle"
+                    data-password-target="password"
+                    aria-label="Show password"
+                    aria-pressed="false"
+                >Show</button>
+            </div>
+
+            <div class="forgot-password-row">
+                <button type="button" id="forgotPasswordButton">
+                    Forgot password?
+                </button>
+            </div>
+
+            <button type="submit" class="auth-button" id="loginButton">
+                Log In →
+            </button>
+
+            <p id="formMessage" class="form-message" aria-live="polite"></p>
+        </form>
+
+        <p class="auth-footer">
+            Your talent deserves the right stage.
+        </p>
+    </section>
+</main>
+
+<script type="module">
+    import { initializeApp } from
+        "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+    import {
+        getAuth,
+        signInWithEmailAndPassword,
+        sendPasswordResetEmail,
+        signOut
+    } from
+        "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    import {
+        getFirestore,
+        doc,
+        getDoc
+    } from
+        "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDLe5UAVUYYfFZxIdaEIqz875uqAT2xEHA",
+        authDomain: "spotlight-430c6.firebaseapp.com",
+        projectId: "spotlight-430c6",
+        storageBucket: "spotlight-430c6.firebasestorage.app",
+        messagingSenderId: "37283174582",
+        appId: "1:37283174582:web:eb0edb53f88786b8ecae17",
+        measurementId: "G-MRHV343K1W"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const form = document.getElementById("loginForm");
+    const message = document.getElementById("formMessage");
+    const loginButton = document.getElementById("loginButton");
+    const forgotButton = document.getElementById("forgotPasswordButton");
+    const emailInput = document.getElementById("email");
+
+    // Show or hide the password.
+    document.querySelectorAll(".password-toggle").forEach(button => {
+        button.addEventListener("click", () => {
+            const input = document.getElementById(
+                button.dataset.passwordTarget
+            );
+
+            const showing = input.type === "password";
+            input.type = showing ? "text" : "password";
+            button.textContent = showing ? "Hide" : "Show";
+            button.setAttribute("aria-label",
+                showing ? "Hide password" : "Show password");
+            button.setAttribute("aria-pressed", String(showing));
+        });
+    });
+
+    function showMessage(text, type) {
+        message.textContent = text;
+        message.className = "form-message " + type;
+    }
+
+    function getLoginError(error) {
+        const messages = {
+            "auth/invalid-credential":
+                "The email or password is incorrect.",
+            "auth/user-not-found":
+                "The email or password is incorrect.",
+            "auth/wrong-password":
+                "The email or password is incorrect.",
+            "auth/invalid-email":
+                "Please enter a valid email address.",
+            "auth/too-many-requests":
+                "Too many attempts. Wait a while before trying again.",
+            "auth/network-request-failed":
+                "Network error. Check your internet connection.",
+            "permission-denied":
+                "Unable to read your profile. Please check the Firestore rules.",
+            "auth/operation-not-allowed":
+                "Email/password login is not enabled in Firebase."
+        };
+
+        return messages[error.code] ||
+            "Login failed. Please try again. Error: " + error.code;
+    }
+
+    // Sign in.
+    form.addEventListener("submit", async event => {
+        event.preventDefault();
+
+        const email = emailInput.value.trim();
+        const password =
+            document.getElementById("password").value;
+
+        loginButton.disabled = true;
+        loginButton.textContent = "Logging in...";
+
+        try {
+            const credential = await signInWithEmailAndPassword(
+                auth, email, password
+            );
+
+            const user = credential.user;
+            const profileSnapshot = await getDoc(
+                doc(db, "users", user.uid)
+            );
+
+            if (!profileSnapshot.exists()) {
+                await signOut(auth);
+                showMessage(
+                    "Your login exists, but your Spotlight profile is missing. Please contact the administrator.",
+                    "error"
+                );
+                return;
+            }
+
+            const profile = profileSnapshot.data();
+
+            showMessage(
+                "Login successful! Welcome back, " +
+                (profile.fullName || "user") + ". Taking you to Spotlight...",
+                "success"
+            );
+
+            setTimeout(() => {
+                window.location.replace("feed.html");
+            }, 900);
+
+        } catch (error) {
+            console.error("Login error:", error);
+            showMessage(getLoginError(error), "error");
+        } finally {
+            loginButton.disabled = false;
+            loginButton.textContent = "Log In →";
+        }
+    });
+
+    // Send a password-reset email.
+    forgotButton.addEventListener("click", async () => {
+        const email = emailInput.value.trim();
+
+        if (!email) {
+            showMessage(
+                "Enter your email address above first, then click Forgot password.",
+                "error"
+            );
+            emailInput.focus();
+            return;
+        }
+
+        forgotButton.disabled = true;
+        forgotButton.textContent = "Sending reset email...";
+
+        try {
+            await sendPasswordResetEmail(auth, email);
+
+            showMessage(
+                "If an account exists for this address, a password-reset email will be sent. Check your inbox and spam folder.",
+                "success"
+            );
+
+        } catch (error) {
+            console.error("Password reset error:", error);
+
+            const messages = {
+                "auth/invalid-email":
+                    "Please enter a valid email address.",
+                "auth/too-many-requests":
+                    "Too many attempts. Wait a while before trying again.",
+                "auth/network-request-failed":
+                    "Network error. Check your internet connection.",
+                "auth/operation-not-allowed":
+                    "Password reset is unavailable because Email/Password authentication is not enabled."
+            };
+
+            showMessage(
+                messages[error.code] ||
+                "We couldn't process the request right now. Please try again later.",
+                "error"
+            );
+        } finally {
+            forgotButton.disabled = false;
+            forgotButton.textContent = "Forgot password?";
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Artist Dashboard | Spotlight</title>
+    <link rel="stylesheet" href="auth.css">
+
+    <style>
+        [hidden] { display: none !important; }
+
+        body {
+            background:
+                radial-gradient(ellipse at 15% 10%, rgba(153, 76, 255, 0.14), transparent 40%),
+                #0b0811;
+        }
+
+        .dashboard-container {
+            width: min(1100px, 92%);
+            margin: 45px auto;
+        }
+
+        .welcome-banner {
+            padding: 35px;
+            border: 1px solid #49305e;
+            border-radius: 20px;
+            background: linear-gradient(120deg, #21132f, #130d1d);
+            margin-bottom: 28px;
+        }
+
+        .eyebrow {
+            color: #c7a0ff;
+        }
+
+        .welcome-banner h1 {
+            font-size: clamp(28px, 5vw, 42px);
+            margin: 12px 0;
+            letter-spacing: -1px;
+        }
+
+        .welcome-banner h1 span {
+            color: #c7a0ff;
+        }
+
+        .welcome-banner p {
+            color: #aaa0b8;
+            line-height: 1.8;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 22px;
+        }
+
+        .dashboard-card {
+            padding: 28px;
+            border: 1px solid #332441;
+            border-radius: 17px;
+            background: rgba(23, 16, 32, 0.92);
+        }
+
+        .dashboard-card h2 {
+            font-size: 19px;
+            margin-bottom: 8px;
+        }
+
+        .card-description {
+            color: #aaa0b8;
+            font-size: 13px;
+            line-height: 1.7;
+            margin-bottom: 23px;
+        }
+
+        .profile-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 25px;
+        }
+
+        .avatar {
+            width: 62px;
+            height: 62px;
+            display: grid;
+            place-items: center;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #b46aff, #6730c8);
+            color: white;
+            font-size: 25px;
+            font-weight: 800;
+            flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .venue-photo-preview {
+            width: 100%;
+            max-height: 220px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin: 8px 0 14px;
+            border: 1px solid #49305e;
+        }
+
+        .profile-row h3 {
+            font-size: 17px;
+            margin-bottom: 5px;
+            overflow-wrap: anywhere;
+        }
+
+        .profile-row p,
+        .profile-detail p {
+            color: #aaa0b8;
+            font-size: 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .profile-detail {
+            padding: 15px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+        }
+
+        .profile-detail strong {
+            display: block;
+            font-size: 13px;
+            margin-bottom: 6px;
+        }
+
+        .dashboard-card input {
+            margin-top: 8px;
+        }
+
+        .dashboard-card label {
+            display: block;
+            margin-top: 15px;
+        }
+
+        .auth-button {
+            width: 100%;
+        }
+
+        .secondary-button {
+            width: 100%;
+            min-height: 45px;
+            margin-top: 12px;
+            padding: 12px;
+            border: 1px solid #49305e;
+            border-radius: 10px;
+            background: transparent;
+            color: #e8d8ff;
+            font: inherit;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .secondary-button:hover {
+            background: rgba(153, 76, 255, 0.1);
+        }
+
+        .opportunity-placeholder {
+            padding: 20px;
+            border: 1px dashed #49305e;
+            border-radius: 12px;
+            color: #aaa0b8;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        .opportunity-placeholder strong {
+            display: block;
+            color: #e8d8ff;
+            margin-bottom: 6px;
+        }
+
+        .dashboard-message {
+            margin-top: 14px;
+            font-size: 13px;
+            line-height: 1.7;
+            overflow-wrap: anywhere;
+        }
+
+        .dashboard-message.error {
+            color: #ff8b9b;
+        }
+
+        .dashboard-message.success {
+            color: #85e5b1;
+        }
+
+        .dashboard-message.info {
+            color: #c7a0ff;
+        }
+
+        .dashboard-footer {
+            margin-top: 30px;
+            padding: 20px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.07);
+            color: #aaa0b8;
+            font-size: 12px;
+            text-align: center;
+        }
+
+        @media (max-width: 700px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .welcome-banner {
+                padding: 25px;
+            }
+
+            .dashboard-card {
+                padding: 22px;
+            }
+        }
+    
+        .dashboard-header { gap: 20px; }
+        .dashboard-nav { display:flex; align-items:center; justify-content:flex-end; gap:18px; flex-wrap:wrap; }
+        .dashboard-nav a { color:#d8cce7; font-size:13px; text-decoration:none; }
+        .dashboard-nav a:hover { color:#c7a0ff; }
+        .dashboard-nav .secondary-button { width:auto; margin:0; padding:9px 14px; }
+        @media (max-width: 760px) {
+            .dashboard-header { align-items:flex-start; flex-direction:column; }
+            .dashboard-nav { justify-content:flex-start; gap:12px; }
+            .dashboard-nav a { font-size:12px; }
+        }
+
+    </style>
+<style>
+textarea, select { width:100%; min-height:47px; margin-bottom:19px; padding:12px 14px; border:1px solid #332441; border-radius:10px; outline:none; background:#100b18; color:#f8f5ff; font:inherit; font-size:13px; }
+textarea:focus, select:focus { border-color:#994cff; box-shadow:0 0 0 3px rgba(153,76,255,.12); }
+</style>
+</head>
+
+<body>
+
+<header class="auth-header dashboard-header">
+    <a href="feed.html" class="logo">spotlight<span>.</span></a>
+    <nav class="dashboard-nav" aria-label="Main navigation">
+        <a href="feed.html">Explore</a>
+        <a href="events.html">Events</a>
+        <a href="my-page.html">My Page</a>
+        <a href="artist-dashboard.html">My Account</a>
+        <button type="button" class="secondary-button" id="logoutButton">Log Out</button>
+    </nav>
+</header>
+
+<main class="dashboard-container">
+
+    <section class="welcome-banner">
+        <span class="eyebrow">ARTIST DASHBOARD</span>
+        <h1>Welcome to your <span>spotlight.</span></h1>
+        <p>
+            Your talent deserves a stage. Manage your profile and get ready
+            to discover opportunities with venues and event organisers across Goa.
+        </p>
+    </section>
+
+    <div id="pageMessage" class="dashboard-message info">
+        Loading your artist profile...
+    </div>
+
+    <div class="dashboard-grid" id="dashboardContent" hidden>
+
+        <!-- Artist profile -->
+        <section class="dashboard-card">
+
+            <h2>Your Profile</h2>
+            <p class="card-description">
+                These details are saved to your Spotlight account.
+            </p>
+
+            <div class="profile-row">
+                <div class="avatar" id="avatar">A</div>
+                <div>
+                    <h3 id="displayName">Artist</h3>
+                    <p id="displayEmail"></p>
+                </div>
+            </div>
+
+            <div class="profile-detail">
+                <strong>Account Type</strong>
+                <p>Artist</p>
+            </div>
+
+            <div class="profile-detail">
+                <strong>Location</strong>
+                <p id="displayLocation">Not provided</p>
+            </div>
+
+            <div class="profile-detail">
+                <strong>Artist Status</strong>
+                <p>Profile created</p>
+            </div>
+
+            <button type="button" class="auth-button" id="editProfileButton">
+                Edit Profile
+            </button>
+
+        </section>
+
+        <!-- Edit profile -->
+        <section class="dashboard-card" id="editProfileCard" hidden>
+
+            <h2>Edit Your Details</h2>
+            <p class="card-description">
+                Keep your name and location up to date.
+            </p>
+
+            <form id="profileForm">
+
+                <label for="fullName">Full Name</label>
+                <input
+                    type="text"
+                    id="fullName"
+                    maxlength="100"
+                    autocomplete="name"
+                    required
+                >
+
+                <label for="location">Location</label>
+                <input
+                    type="text"
+                    id="location"
+                    maxlength="100"
+                    placeholder="e.g. Margao, Goa"
+                    required
+                >
+
+                <label for="profileImageUrl">Profile picture image URL</label>
+                <input
+                    type="url"
+                    id="profileImageUrl"
+                    maxlength="1000"
+                    placeholder="Paste an image address (optional)"
+                >
+
+                <label for="artistCategory">Artist category</label>
+                <select id="artistCategory">
+                    <option value="Singer">Singer</option>
+                    <option value="Musician">Musician</option>
+                    <option value="DJ">DJ</option>
+                    <option value="Dancer">Dancer</option>
+                    <option value="Band">Band</option>
+                    <option value="Other artist">Other</option>
+                </select>
+
+                <label for="description">Short description / bio</label>
+                <textarea id="description" maxlength="500" rows="4" placeholder="Describe your style, experience or the kind of performances you do."></textarea>
+
+                <button type="submit" class="auth-button" id="saveProfileButton">
+                    Save Changes
+                </button>
+
+                <p id="editMessage" class="dashboard-message"
+                   aria-live="polite"></p>
+
+            </form>
+
+        </section>
+
+        <!-- Opportunities -->
+        <section class="dashboard-card">
+
+            <h2>Discover Opportunities</h2>
+            <p class="card-description">
+                Your next performance could start here.
+            </p>
+
+            <div class="opportunity-placeholder">
+                <strong>🎤 Opportunities coming soon</strong>
+                We're preparing the venue discovery feature.
+                Soon, you'll be able to find venues and event organisers
+                looking for artists.
+            </div>
+
+        </section>
+
+        <!-- Account information -->
+        <section class="dashboard-card">
+
+            <h2>Your Spotlight Journey</h2>
+            <p class="card-description">
+                A few things to know about your account.
+            </p>
+
+            <div class="profile-detail">
+                <strong>Step 1 — Create your account</strong>
+                <p>Completed. Your account is registered with Firebase.</p>
+            </div>
+
+            <div class="profile-detail">
+                <strong>Step 2 — Complete your profile</strong>
+                <p>Keep your name and location accurate.</p>
+            </div>
+
+            <div class="profile-detail">
+                <strong>Step 3 — Find your stage</strong>
+                <p>Venue discovery will be added next.</p>
+            </div>
+
+        </section>
+
+    </div>
+
+    <footer class="dashboard-footer">
+        Spotlight — Your Talent. Your Stage.
+    </footer>
+
+</main>
+
+<script type="module">
+    import { initializeApp } from
+        "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+    import {
+        getAuth,
+        onAuthStateChanged,
+        signOut,
+        updateProfile
+    } from
+        "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    import {
+        getFirestore,
+        doc,
+        getDoc,
+        updateDoc
+    } from
+        "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDLe5UAVUYYfFZxIdaEIqz875uqAT2xEHA",
+        authDomain: "spotlight-430c6.firebaseapp.com",
+        projectId: "spotlight-430c6",
+        storageBucket: "spotlight-430c6.firebasestorage.app",
+        messagingSenderId: "37283174582",
+        appId: "1:37283174582:web:eb0edb53f88786b8ecae17",
+        measurementId: "G-MRHV343K1W"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const pageMessage = document.getElementById("pageMessage");
+    const dashboardContent = document.getElementById("dashboardContent");
+    const profileForm = document.getElementById("profileForm");
+    const editMessage = document.getElementById("editMessage");
+    const saveButton = document.getElementById("saveProfileButton");
+
+    let currentUser = null;
+    let profileRef = null;
+
+    function showMessage(element, text, type = "info") {
+        element.textContent = text;
+        element.className = "dashboard-message " + type;
+    }
+
+    function showProfile(profile, user) {
+        document.getElementById("displayName").textContent =
+            profile.fullName || user.displayName || "Artist";
+
+        document.getElementById("displayEmail").textContent =
+            user.email || "";
+
+        document.getElementById("displayLocation").textContent =
+            profile.location || "Not provided";
+
+        const name = profile.fullName || user.displayName || "Artist";
+
+        const avatar = document.getElementById("avatar");
+        const initial = name.trim().charAt(0).toUpperCase() || "A";
+        avatar.replaceChildren();
+        if (profile.profileImageUrl) {
+            const image = document.createElement("img");
+            image.src = profile.profileImageUrl;
+            image.alt = name + " profile picture";
+            image.onerror = () => { avatar.textContent = initial; };
+            avatar.appendChild(image);
+        } else {
+            avatar.textContent = initial;
+        }
+
+        document.getElementById("fullName").value =
+            profile.fullName || user.displayName || "";
+
+        document.getElementById("location").value =
+            profile.location || "";
+        document.getElementById("profileImageUrl").value =
+            profile.profileImageUrl || "";
+        document.getElementById("artistCategory").value = profile.artistCategory || "Singer";
+        document.getElementById("description").value = profile.description || "";
+    }
+
+    // Check whether the visitor is signed in.
+    onAuthStateChanged(auth, async user => {
+        if (!user) {
+            window.location.replace("login.html");
+            return;
+        }
+
+        currentUser = user;
+        profileRef = doc(db, "users", user.uid);
+
+        try {
+            const profileSnapshot = await getDoc(profileRef);
+
+            if (!profileSnapshot.exists()) {
+                showMessage(
+                    pageMessage,
+                    "Your Spotlight profile could not be found.",
+                    "error"
+                );
+                return;
+            }
+
+            const profile = profileSnapshot.data();
+
+            // Prevent venue accounts from using the artist dashboard.
+            if (profile.accountType !== "artist") {
+                window.location.replace("venue-dashboard.html");
+                return;
+            }
+
+            showProfile(profile, user);
+
+            pageMessage.textContent = "";
+            dashboardContent.hidden = false;
+
+        } catch (error) {
+            console.error("Profile loading error:", error);
+
+            showMessage(
+                pageMessage,
+                "Couldn't load your profile. Check your internet connection and Firestore rules.",
+                "error"
+            );
+        }
+    });
+
+    // Show the edit form only when requested.
+    document.getElementById("editProfileButton").addEventListener("click", () => {
+        const editCard = document.getElementById("editProfileCard");
+        editCard.hidden = false;
+        document.getElementById("editProfileButton").textContent = "Editing Profile";
+        editCard.scrollIntoView({ behavior: "smooth", block: "center" });
+        document.getElementById("fullName").focus();
+    });
+
+    // Save profile changes.
+    profileForm.addEventListener("submit", async event => {
+        event.preventDefault();
+
+        if (!currentUser || !profileRef) return;
+
+        const fullName =
+            document.getElementById("fullName").value.trim();
+
+        const location =
+            document.getElementById("location").value.trim();
+        const profileImageUrl =
+            document.getElementById("profileImageUrl").value.trim();
+        const artistCategory = document.getElementById("artistCategory").value;
+        const description = document.getElementById("description").value.trim();
+
+        if (!fullName || !location) {
+            showMessage(
+                editMessage,
+                "Please complete both fields.",
+                "error"
+            );
+            return;
+        }
+
+        saveButton.disabled = true;
+        saveButton.textContent = "Saving...";
+
+        try {
+            await updateDoc(profileRef, {
+                fullName,
+                location,
+                profileImageUrl,
+                artistCategory,
+                description
+            });
+
+            await updateProfile(currentUser, {
+                displayName: fullName
+            });
+
+            showProfile({
+                fullName,
+                location,
+                profileImageUrl,
+                artistCategory,
+                description
+            }, currentUser);
+
+            showMessage(
+                editMessage,
+                "Your profile has been updated successfully!",
+                "success"
+            );
+
+        } catch (error) {
+            console.error("Profile update error:", error);
+
+            showMessage(
+                editMessage,
+                error.code === "permission-denied"
+                    ? "Firebase rejected the change. Check your Firestore security rules."
+                    : "Couldn't save your changes. Please try again.",
+                "error"
+            );
+
+        } finally {
+            saveButton.disabled = false;
+            saveButton.textContent = "Save Changes";
+        }
+    });
+
+    // Sign out safely.
+    document.getElementById("logoutButton").addEventListener(
+        "click", async () => {
+            const button = document.getElementById("logoutButton");
+            button.disabled = true;
+            button.textContent = "Logging out...";
+
+            try {
+                await signOut(auth);
+                window.location.replace("login.html");
+            } catch (error) {
+                console.error("Logout error:", error);
+                button.disabled = false;
+                button.textContent = "Log Out";
+
+                showMessage(
+                    pageMessage,
+                    "Couldn't log out. Please try again.",
+                    "error"
+                );
+            }
+        }
+    );
+</script>
+
+</body>
+</html>

@@ -1,0 +1,413 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap');
+
+:root {
+--background: #0b0811;
+--card: #171020;
+--border: #332441;
+--purple: #994cff;
+--purple-light: #c7a0ff;
+--text: #f8f5ff;
+--muted: #aaa0b8;
+}
+
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+}
+
+body {
+min-height: 100vh;
+font-family: 'Manrope', sans-serif;
+color: var(--text);
+background:
+radial-gradient(ellipse at 20% 15%, rgba(116, 44, 173, 0.13), transparent 42%),
+var(--background);
+}
+
+a {
+color: inherit;
+text-decoration: none;
+}
+
+/* Header */
+.auth-header {
+min-height: 82px;
+padding: 18px 7%;
+display: flex;
+align-items: center;
+justify-content: space-between;
+border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* Homepage Spotlight logo: matching glitter, outline and glow */
+.auth-header /* Shared glitter logo, matching the homepage */
+.logo {
+    position: relative;
+    display: inline-block;
+    font-family: 'Manrope', sans-serif;
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: 0;
+    line-height: 1.4;
+    white-space: nowrap;
+    text-decoration: none;
+    background-image: url("glitter.png");
+    background-size: 110px 110px;
+    background-position: center;
+    background-repeat: repeat;
+    color: transparent;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 0.45px rgba(244, 226, 255, 0.9);
+    filter:
+        drop-shadow(0 0 2px rgba(255, 255, 255, 0.9))
+        drop-shadow(0 0 5px rgba(220, 184, 255, 0.85))
+        drop-shadow(0 0 12px rgba(166, 93, 255, 0.8))
+        drop-shadow(0 0 22px rgba(132, 61, 255, 0.55));
+}
+
+.logo span {
+    color: transparent;
+    background-image: url("glitter.png");
+    background-size: 110px 110px;
+    background-position: center;
+    background-repeat: repeat;
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-text-stroke: 0.45px rgba(244, 226, 255, 0.9);
+}
+
+@media (max-width: 650px) {
+    .logo { font-size: 29px; }
+}
+
+.header-link {
+color: var(--muted);
+font-size: 13px;
+transition: color 0.2s ease;
+}
+
+.header-link,
+.auth-footer a {
+color: var(--purple-light);
+}
+
+/* Main layout */
+.auth-container {
+min-height: calc(100vh - 82px);
+padding: 48px 20px;
+display: flex;
+justify-content: center;
+align-items: center;
+}
+
+.auth-card {
+width: 100%;
+max-width: 460px;
+padding: 38px;
+background: rgba(23, 16, 32, 0.92);
+border: 1px solid var(--border);
+border-radius: 22px;
+box-shadow: 0 20px 70px rgba(0, 0, 0, 0.28);
+}
+
+/* Headings */
+.auth-heading {
+margin-bottom: 30px;
+}
+
+.eyebrow {
+display: inline-block;
+margin-bottom: 15px;
+color: var(--purple-light);
+font-size: 10px;
+font-weight: 800;
+letter-spacing: 1.5px;
+}
+
+.auth-heading h1 {
+margin-bottom: 10px;
+font-size: clamp(27px, 5vw, 34px);
+line-height: 1.25;
+letter-spacing: -1px;
+}
+
+.auth-heading h1 span {
+color: var(--purple-light);
+}
+
+.auth-heading p {
+color: var(--muted);
+font-size: 13px;
+line-height: 1.7;
+}
+
+/* Forms */
+form {
+display: flex;
+flex-direction: column;
+}
+
+label {
+margin: 0 0 8px;
+font-size: 12px;
+font-weight: 700;
+}
+
+input,
+select {
+width: 100%;
+min-height: 47px;
+margin-bottom: 19px;
+padding: 12px 14px;
+border: 1px solid var(--border);
+border-radius: 10px;
+outline: none;
+background: #100b18;
+color: var(--text);
+font: inherit;
+font-size: 13px;
+transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input::placeholder {
+color: #746a80;
+}
+
+input,
+select {
+border-color: var(--purple);
+box-shadow: 0 0 0 3px rgba(153, 76, 255, 0.12);
+}
+
+select {
+cursor: pointer;
+}
+
+/* Password field and Show/Hide button */
+.password-wrapper {
+position: relative;
+width: 100%;
+margin-bottom: 19px;
+}
+
+.password-wrapper input {
+display: block;
+margin-bottom: 0;
+padding-right: 72px;
+}
+
+.password-toggle {
+position: absolute;
+top: 50%;
+right: 12px;
+transform: translateY(-50%);
+padding: 5px 7px;
+border: none;
+background: transparent;
+color: var(--purple-light);
+font-family: inherit;
+font-size: 12px;
+font-weight: 700;
+cursor: pointer;
+}
+
+.password-toggle {
+color: #ffffff;
+}
+
+/* Forgot password */
+.forgot-password-row {
+display: flex;
+justify-content: flex-end;
+margin-top: -10px;
+margin-bottom: 20px;
+}
+
+.forgot-password-row button {
+padding: 4px 0;
+border: none;
+background: transparent;
+color: var(--purple-light);
+font-family: inherit;
+font-size: 12px;
+cursor: pointer;
+}
+
+.forgot-password-row button {
+color: #ffffff;
+text-decoration: underline;
+}
+
+/* Submit button */
+.auth-button {
+min-height: 49px;
+margin-top: 5px;
+padding: 13px 18px;
+border: none;
+border-radius: 10px;
+background: linear-gradient(120deg, #a34dff, #7736df);
+color: #ffffff;
+font: inherit;
+font-size: 13px;
+font-weight: 800;
+cursor: pointer;
+transition: transform 0.2s, box-shadow 0.2s, opacity 0.2s;
+}
+
+.auth-button:hover() {
+transform: translateY(-1px);
+box-shadow: 0 8px 25px rgba(137, 63, 255, 0.28);
+}
+
+/* Normal button appearance and clickable cursor */
+.auth-button {
+    opacity: 1;
+    cursor: pointer;
+}
+
+.password-toggle,
+.forgot-password-row button {
+    opacity: 1;
+    cursor: pointer;
+}
+
+/* Only show a waiting cursor while processing */
+.auth-button:disabled,
+.forgot-password-row button:disabled {
+    opacity: 0.7;
+    cursor: wait;
+}
+
+/* Keep hover effects when buttons are available */
+.auth-button:not(:disabled):hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px rgba(137, 63, 255, 0.28);
+}
+
+/* Form feedback */
+.form-message {
+margin-top: 15px;
+font-size: 12px;
+line-height: 1.6;
+overflow-wrap: anywhere;
+}
+
+.form-message.info {
+color: var(--purple-light);
+}
+
+.form-message.error {
+color: #ff8b9b;
+}
+
+.form-message.success {
+color: #85e5b1;
+}
+
+/* Footer */
+.auth-footer {
+margin-top: 24px;
+color: var(--muted);
+font-size: 11px;
+line-height: 1.8;
+text-align: center;
+}
+
+.auth-footer a {
+color: var(--purple-light);
+font-weight: 700;
+}
+
+/* Responsive layout */
+@media (max-width: 650px) {
+.auth-header .logo {
+font-size: 29px;
+}
+}
+
+@media (max-width: 480px) {
+.auth-header {
+padding: 16px 5%;
+gap: 12px;
+}
+
+.auth-header .logo {
+    font-size: 25px;
+}
+
+.header-link {
+    font-size: 11px;
+    text-align: right;
+}
+
+.auth-container {
+    padding: 28px 15px;
+}
+
+.auth-card {
+    padding: 26px 22px;
+}
+
+}
+/* Password visibility controls */
+.password-wrapper {
+    position: relative;
+    width: 100%;
+}
+.password-wrapper input {
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 75px;
+}
+.password-toggle {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+    padding: 6px 8px;
+    border: 0;
+    border-radius: 6px;
+    background: transparent;
+    color: #ffffff;
+    font: inherit;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+}
+.password-toggle:hover,
+.forgot-password-row button:hover { color: var(--purple-light); }
+
+.forgot-password-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: -8px;
+    margin-bottom: 20px;
+}
+.forgot-password-row button {
+    padding: 4px 0;
+    border: 0;
+    background: transparent;
+    color: var(--purple-light);
+    font: inherit;
+    font-size: 12px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.form-message { overflow-wrap: anywhere; }
+.form-message.error { color: #ff8b9b; }
+.form-message.success { color: #85e5b1; }
+.form-message.info { color: #c7a0ff; }
+
+button:disabled {
+    opacity: 0.65;
+    cursor: wait;
+}
+button:not(:disabled) { cursor: pointer; }
+
+@media (max-width: 480px) {
+    .logo { font-size: 25px; }
+}

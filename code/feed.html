@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Spotlight Community | Your Talent. Your Stage.</title>
+<link rel="stylesheet" href="auth.css">
+<style>
+[hidden]{display:none!important}
+body{background:radial-gradient(ellipse at 15% 5%,rgba(153,76,255,.15),transparent 38%),#0b0811}
+.feed-header{position:sticky;top:0;z-index:5;background:rgba(11,8,17,.94);backdrop-filter:blur(12px)}
+.feed-nav{display:flex;align-items:center;gap:20px}.feed-nav a{color:#d8cce7;font-size:13px;white-space:nowrap}.feed-nav a:hover{color:#c7a0ff}
+.feed-wrap{width:min(1240px,92%);margin:30px auto}
+.feed-intro{display:flex;justify-content:space-between;align-items:center;gap:24px;padding:10px 0 26px;border-bottom:1px solid rgba(255,255,255,.09);margin-bottom:26px}
+.eyebrow{color:#c7a0ff;font-size:10px;font-weight:800;letter-spacing:1.7px}.feed-intro h1{font-size:clamp(30px,4vw,44px);letter-spacing:-1.5px;margin:8px 0}.feed-intro h1 span{color:#c7a0ff}.feed-intro p{color:#aaa0b8;line-height:1.7;margin:0;max-width:650px}
+.intro-cta{display:inline-flex;align-items:center;gap:18px;white-space:nowrap;padding:13px 17px;border:1px solid #6c3d8b;border-radius:12px;background:linear-gradient(135deg,#512779,#29153b);color:#fff;text-decoration:none;font-size:13px;font-weight:700;box-shadow:0 8px 24px #6d2bb522}.intro-cta span{font-size:18px}
+#feedControls{margin:24px 0 30px}
+#feedControls>div:first-child{align-items:center}
+.feed-filter,.feed-filter.active{border-radius:999px!important;padding:9px 16px!important;font-size:12px;border:1px solid #3c2b4b!important;background:#17101f;color:#c9bfd5;transition:.2s}
+.feed-filter.active{background:#8c42ed!important;border-color:#b078ff!important;color:#fff;box-shadow:0 5px 18px #8c42ed33}
+#profileSearch{max-width:620px!important;border-radius:13px!important;padding:15px 17px!important;background:#100b18!important;border:1px solid #3c2b4b!important;outline:none;transition:border-color .2s,box-shadow .2s}
+#profileSearch:focus{border-color:#a36bea!important;box-shadow:0 0 0 3px #8c42ed22}
+
+.feed-section{margin:34px 0}.section-heading{display:flex;justify-content:space-between;align-items:end;gap:15px;margin-bottom:20px}.section-heading h2{font-size:23px;letter-spacing:-.5px}.section-heading p{color:#aaa0b8;font-size:13px;margin-top:6px}
+.card-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px}
+
+.discovery-card{position:relative;display:flex;flex-direction:column;min-width:0;overflow:hidden;border:1px solid #30223c;border-radius:20px;background:#15101b;transition:transform .25s,border-color .25s,box-shadow .25s;cursor:pointer;outline:none}
+.discovery-card:hover,.discovery-card:focus-visible{transform:translateY(-5px);border-color:#9951ed;box-shadow:0 18px 42px #0007}
+.discovery-art{height:245px;display:grid;place-items:center;overflow:hidden;font-size:54px;background:linear-gradient(135deg,#2a1740,#120d1b);color:#d7b4ff;position:relative}
+.discovery-art img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}.discovery-card:hover .discovery-art img{transform:scale(1.045)}
+.discovery-body{padding:20px;display:flex;flex-direction:column;align-items:flex-start;flex:1}
+.discovery-body h3{font-size:17px;margin:0 0 7px;overflow-wrap:anywhere}.discovery-body p{font-size:13px;color:#aaa0b8;line-height:1.7;overflow-wrap:anywhere}
+.pill{display:inline-block;margin-bottom:10px;padding:5px 9px;border:1px solid #49305e;border-radius:30px;color:#c7a0ff;font-size:10px;font-weight:700}
+.card-location{margin-top:auto;padding-top:12px;color:#d7c6e9!important}.own-badge{position:absolute;top:12px;left:12px;background:#8c42ed;color:white;border-radius:30px;padding:6px 10px;font-size:10px;font-weight:800;z-index:1}
+.feed-filter.active{background:#8c42ed;border-color:#8c42ed;color:#fff}.empty-note{padding:18px;border:1px dashed #49305e;border-radius:12px;color:#aaa0b8;font-size:13px;line-height:1.7;margin-top:12px}
+.feed-footer{text-align:center;color:#8e829d;border-top:1px solid rgba(255,255,255,.08);padding:22px;margin-top:42px;font-size:12px}
+.welcome-backdrop{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(5,3,10,.78);backdrop-filter:blur(12px)}
+.welcome-popup{position:relative;width:min(500px,100%);padding:34px;border:1px solid #694285;border-radius:24px;background:radial-gradient(ellipse at top left,#2b1740,#130d1b 68%);box-shadow:0 30px 100px #0009;animation:popupIn .28s ease-out}
+.welcome-popup h2{font-size:clamp(26px,5vw,36px);line-height:1.15;letter-spacing:-1px;margin:14px 0}.welcome-popup h2 span{color:#c7a0ff}.welcome-popup p{color:#b9adc7;font-size:14px;line-height:1.8;margin-bottom:24px}
+.welcome-close{position:absolute;right:14px;top:14px;width:34px;height:34px;border:1px solid #513766;border-radius:50%;background:#1b1026;color:#fff;font-size:22px;cursor:pointer}
+.welcome-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.welcome-actions .auth-button{display:inline-block;width:auto;text-decoration:none;padding:12px 16px}.welcome-actions .secondary-button{width:auto;padding:12px 16px}
+@keyframes popupIn{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.modal-backdrop{position:fixed;inset:0;background:rgba(4,2,8,.78);backdrop-filter:blur(7px);z-index:20;display:flex;align-items:center;justify-content:center;padding:20px}
+.profile-modal{position:relative;width:min(650px,100%);max-height:90vh;overflow:auto;background:#171020;border:1px solid #49305e;border-radius:20px;box-shadow:0 25px 80px #0009}
+.modal-close{position:absolute;right:14px;top:14px;z-index:2;border:1px solid #604276;background:#160e20;color:white;width:38px;height:38px;border-radius:50%;font-size:22px;cursor:pointer}
+.modal-image{width:100%;height:300px;object-fit:cover;display:block;background:linear-gradient(135deg,#2a1740,#120d1b)}
+.modal-content{padding:26px}.modal-content h2{font-size:28px;margin:5px 0 8px}.modal-content p{color:#b8abc8;line-height:1.8;font-size:14px;white-space:pre-wrap}.modal-meta{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 16px}
+.modal-meta span{border:1px solid #49305e;border-radius:20px;padding:6px 10px;font-size:11px;color:#d8c5ed}
+@media(max-width:850px){.card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.feed-nav{gap:11px}}
+@media(max-width:600px){.feed-header{align-items:flex-start;gap:12px;flex-wrap:wrap}.feed-nav{flex-wrap:wrap;gap:12px}.feed-nav a{font-size:12px}.card-grid{grid-template-columns:1fr}.discovery-art{height:245px}.feed-intro{align-items:flex-start;flex-direction:column}.intro-cta{align-self:flex-start}.welcome-popup{padding:28px 22px}.modal-image{height:220px}}
+</style>
+</head>
+<body>
+<header class="auth-header feed-header">
+<a href="feed.html" class="logo">spotlight<span>.</span></a>
+<nav class="feed-nav">
+<a href="feed.html">Explore</a><a href="events.html">Events</a><a href="my-page.html">My Page</a>
+<a id="accountLink" href="artist-dashboard.html">Dashboard</a>
+<button id="logoutButton" class="secondary-button" style="width:auto;margin:0;padding:9px 14px">Log Out</button>
+</nav></header>
+<main class="feed-wrap">
+<section class="feed-intro">
+  <div><span class="eyebrow">GOA’S CREATIVE SCENE</span><h1>Find your <span>people.</span></h1><p>Discover artists, venues and the next place your creativity can take you.</p></div>
+  <a class="intro-cta" href="events.html">Explore events <span>↗</span></a>
+</section>
+<section class="feed-section" id="feedControls">
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">
+<button class="secondary-button feed-filter active" data-filter="all" style="width:auto">All</button>
+<button class="secondary-button feed-filter" data-filter="venue" style="width:auto">Venues</button>
+<button class="secondary-button feed-filter" data-filter="artist" style="width:auto">Artists</button>
+<a class="secondary-button" href="events.html" style="width:auto;text-decoration:none">Live & Upcoming Events →</a>
+</div>
+<input id="profileSearch" type="search" placeholder="Search artists, venues or locations…" style="width:100%;max-width:520px;background:#100b18;color:#fff;border:1px solid #49305e;border-radius:10px;padding:13px">
+</section>
+<section class="feed-section" id="venues"><div class="section-heading"><div><h2>🏢 Explore Venues</h2><p>Spaces for performances, events and creative meetups.</p></div></div><div class="card-grid" id="venueGrid"></div><div class="empty-note" id="venueNote">Loading venue listings…</div></section>
+<section class="feed-section" id="artists"><div class="section-heading"><div><h2>🎤 Discover Artists</h2><p>Meet performers and creative people around Goa.</p></div></div><div class="card-grid" id="artistGrid"></div><div class="empty-note" id="artistNote">Loading artist profiles…</div></section>
+<footer class="feed-footer">Spotlight — Your Talent. Your Stage.</footer></main>
+<div class="welcome-backdrop" id="welcomePopup" hidden role="dialog" aria-modal="true" aria-labelledby="welcomeTitle">
+  <section class="welcome-popup">
+    <button class="welcome-close" id="closeWelcome" aria-label="Close welcome message">×</button>
+    <span class="eyebrow">YOU’RE BACK IN THE SPOTLIGHT</span>
+    <h2 id="welcomeTitle">Welcome back, <span id="welcomeName">creative</span>.</h2>
+    <p>Your creative community is waiting. Find a venue, discover an artist, or see what’s happening next.</p>
+    <div class="welcome-actions"><a href="events.html" class="auth-button">Explore events ↗</a><button class="secondary-button" id="dismissWelcome">Let me explore</button></div>
+  </section>
+</div>
+<div class="modal-backdrop" id="profileModal" hidden role="dialog" aria-modal="true" aria-labelledby="modalName">
+<section class="profile-modal"><button class="modal-close" id="closeModal" aria-label="Close profile">×</button><img class="modal-image" id="modalImage" alt=""><div class="modal-content"><span class="pill" id="modalType">PROFILE</span><h2 id="modalName">Profile</h2><div class="modal-meta" id="modalMeta"></div><p id="modalDescription"></p><p id="modalEmail" hidden></p><div style="margin-top:18px" id="modalOwnNote" hidden><a class="auth-button" style="display:inline-block" id="editOwnProfile" href="artist-dashboard.html">Edit your profile</a></div></div></section>
+</div>
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,onAuthStateChanged,signOut} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getFirestore,doc,getDoc,collection,getDocs} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const firebaseConfig={apiKey:"AIzaSyDLe5UAVUYYfFZxIdaEIqz875uqAT2xEHA",authDomain:"spotlight-430c6.firebaseapp.com",projectId:"spotlight-430c6",storageBucket:"spotlight-430c6.firebasestorage.app",messagingSenderId:"37283174582",appId:"1:37283174582:web:eb0edb53f88786b8ecae17",measurementId:"G-MRHV343K1W"};
+const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getFirestore(app);
+let signedInUser=null, signedInProfile={};
+const $=id=>document.getElementById(id);
+function makeCard(profile,uid,type){
+ const name=profile.fullName|| (type==="venue"?"Spotlight Venue":"Spotlight Artist");
+ const photo=type==="venue"?(profile.venueImageUrl||profile.profileImageUrl):profile.profileImageUrl;
+ const card=document.createElement("article");card.className="discovery-card";card.dataset.type=type;card.dataset.search=(name+" "+(profile.location||"")+" "+(profile.description||"")+" "+(profile.artistCategory||profile.venueType||"")).toLowerCase();card.tabIndex=0;card.setAttribute("role","button");card.setAttribute("aria-label","View profile for "+name);
+ if(signedInUser&&uid===signedInUser.uid){const badge=document.createElement("span");badge.className="own-badge";badge.textContent="YOUR PROFILE";card.appendChild(badge);}
+ const art=document.createElement("div");art.className="discovery-art";
+ if(photo){const img=document.createElement("img");img.src=photo;img.alt=name;img.loading="lazy";img.onerror=()=>{img.remove();art.textContent=type==="venue"?"🏢":"🎤";};art.appendChild(img);}else art.textContent=type==="venue"?"🏢":"🎤";
+ const body=document.createElement("div");body.className="discovery-body";
+ const pill=document.createElement("span");pill.className="pill";pill.textContent=type==="venue"?(profile.venueType||"VENUE / EVENT ORGANISER"):(profile.artistCategory||"ARTIST");
+ const h=document.createElement("h3");h.textContent=name;
+ const desc=document.createElement("p");desc.textContent=profile.description|| (type==="venue"?"Venue profile — open to view more details.":"Artist profile — open to view more details.");
+ const loc=document.createElement("p");loc.className="card-location";loc.textContent="📍 "+(profile.location||"Goa · Location not added yet");
+ body.append(pill,h,desc,loc);card.append(art,body);
+ const open=()=>showProfile(profile,uid,type,name,photo);
+ card.addEventListener("click",open);card.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();open();}});
+ return card;
+}
+function showProfile(profile,uid,type,name,photo){
+ $("modalType").textContent=type==="venue"?"VENUE / EVENT ORGANISER":(profile.artistCategory||"ARTIST").toUpperCase();
+ $("modalName").textContent=name;
+ $("modalImage").src=photo||"";$("modalImage").hidden=!photo;$("modalImage").alt=name;
+ $("modalDescription").textContent=profile.description||"No description has been added yet.";
+ $("modalMeta").replaceChildren();
+ [["Location",profile.location||"Not provided"],["Category",type==="venue"?(profile.venueType||"Venue / Event Organiser"):(profile.artistCategory||"Artist")]].forEach(([k,v])=>{const s=document.createElement("span");s.textContent=k+": "+v;$("modalMeta").appendChild(s);});
+ const own=signedInUser&&uid===signedInUser.uid;
+ $("modalOwnNote").hidden=!own;
+ $("editOwnProfile").href=type==="venue"?"venue-dashboard.html":"artist-dashboard.html";
+ $("modalEmail").hidden=true; // Do not expose email addresses on public profile cards.
+ $("profileModal").hidden=false;document.body.style.overflow="hidden";
+}
+function closeModal(){$("profileModal").hidden=true;document.body.style.overflow="";}
+$("closeModal").addEventListener("click",closeModal);
+$("profileModal").addEventListener("click",e=>{if(e.target===$("profileModal"))closeModal();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")closeModal();});
+function showEmpty(grid,note,message){grid.replaceChildren();note.textContent=message;}
+async function loadCommunityListings(){
+ const vg=$("venueGrid"),ag=$("artistGrid"),vn=$("venueNote"),an=$("artistNote");
+ try{
+  const snap=await getDocs(collection(db,"users"));const venues=[],artists=[];
+  snap.forEach(d=>{const p=d.data();if(p.accountType==="venue")venues.push({p,uid:d.id});else if(p.accountType==="artist")artists.push({p,uid:d.id});});
+  venues.sort((a,b)=>(a.p.fullName||"").localeCompare(b.p.fullName||""));artists.sort((a,b)=>(a.p.fullName||"").localeCompare(b.p.fullName||""));
+  vg.replaceChildren();ag.replaceChildren();
+  venues.forEach(x=>vg.appendChild(makeCard(x.p,x.uid,"venue")));
+  artists.forEach(x=>ag.appendChild(makeCard(x.p,x.uid,"artist")));
+  vn.textContent=venues.length?`Showing ${venues.length} registered venue${venues.length===1?"":"s"}. Select a card to view its profile.`:"No venue profiles yet. Register a venue account to add the first listing.";
+  an.textContent=artists.length?`Showing ${artists.length} artist profile${artists.length===1?"":"s"}. Select a card to view the profile.`:"No artist profiles yet. Register an artist account to join the community.";
+ }catch(error){
+  console.error("Could not load community listings:",error);
+  vn.textContent="Couldn't load profiles from Firebase. Check your Firestore rules and connection.";
+  an.textContent="Artist profiles couldn't be loaded.";
+ }
+}
+let activeFilter="all";
+function applyProfileFilters(){
+ const term=($("profileSearch").value||"").trim().toLowerCase();
+ document.querySelectorAll(".discovery-card").forEach(card=>{
+  card.hidden=(activeFilter!=="all"&&card.dataset.type!==activeFilter)||!card.dataset.search.includes(term);
+ });
+ $("venues").hidden=activeFilter==="artist";
+ $("artists").hidden=activeFilter==="venue";
+}
+document.querySelectorAll(".feed-filter").forEach(btn=>btn.addEventListener("click",()=>{
+ activeFilter=btn.dataset.filter;
+ document.querySelectorAll(".feed-filter").forEach(b=>b.classList.toggle("active",b===btn));
+ applyProfileFilters();
+}));
+$("profileSearch").addEventListener("input",applyProfileFilters);
+onAuthStateChanged(auth,async user=>{
+ if(!user){location.replace("login.html");return;}
+ signedInUser=user;
+ try{
+  const snap=await getDoc(doc(db,"users",user.uid));signedInProfile=snap.exists()?snap.data():{};
+  const name=signedInProfile.fullName||user.displayName||"creative";
+  $("welcomeName").textContent=name.split(" ")[0]; 
+  const lastVisit=Number(localStorage.getItem("spotlightLastVisit")||0);
+  const now=Date.now();
+  if(lastVisit && now-lastVisit>=10*60*1000){
+    $("welcomePopup").hidden=false;
+    document.body.style.overflow="hidden";
+  }
+  localStorage.setItem("spotlightLastVisit",String(now));
+  const isVenue=signedInProfile.accountType==="venue";
+  $("accountLink").href=isVenue?"venue-dashboard.html":"artist-dashboard.html";
+  $("accountLink").textContent=isVenue?"Venue Account":"My Account";
+  await loadCommunityListings();applyProfileFilters();
+ }catch(e){console.error(e);$("venueNote").textContent="Couldn't load your account details. Please refresh.";}
+});
+function closeWelcome(){ $("welcomePopup").hidden=true; document.body.style.overflow=""; }
+$("closeWelcome").addEventListener("click",closeWelcome);
+$("dismissWelcome").addEventListener("click",closeWelcome);
+$("welcomePopup").addEventListener("click",e=>{if(e.target===$("welcomePopup"))closeWelcome();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("welcomePopup").hidden)closeWelcome();});
+$("logoutButton").addEventListener("click",async()=>{const b=$("logoutButton");b.disabled=true;try{await signOut(auth);location.replace("index.html");}catch(e){console.error(e);b.disabled=false;alert("Couldn't log out. Please try again.");}});
+</script>
+</body></html>

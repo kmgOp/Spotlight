@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Join Spotlight</title>
+    <link rel="stylesheet" href="auth.css">
+</head>
+<body>
+    <header class="auth-header">
+        <a href="index.html" class="logo">spotlight<span>.</span></a>
+        <a href="login.html" class="header-link">Already have an account? Log in</a>
+    </header>
+
+<main class="auth-container">
+    <section class="auth-card">
+        <div class="auth-heading">
+            <span class="eyebrow">JOIN THE COMMUNITY</span>
+            <h1>Find your <span>spotlight.</span></h1>
+            <p>Create an account to get started.</p>
+        </div>
+
+        <form id="registerForm">
+            <label for="accountType">I want to join as</label>
+            <select id="accountType" name="accountType" required>
+                <option value="artist">Artist</option>
+                <option value="venue">Venue / Event Organiser</option>
+            </select>
+
+            <label for="fullName">Full name</label>
+            <input
+                type="text"
+                id="fullName"
+                name="fullName"
+                placeholder="Enter your full name"
+                autocomplete="name"
+                required
+            >
+
+            <label for="email">Email address</label>
+            <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="you@example.com"
+                autocomplete="email"
+                required
+            >
+
+            <label for="password">Password</label>
+            <div class="password-wrapper">
+                <input
+                    type="password"
+                    id="password"
+                    name="password"
+                    placeholder="At least 6 characters"
+                    minlength="6"
+                    autocomplete="new-password"
+                    required
+                >
+                <button
+                    type="button"
+                    class="password-toggle"
+                    data-password-target="password"
+                    aria-label="Show password"
+                    aria-pressed="false"
+                >Show</button>
+            </div>
+
+            <label for="location">Location</label>
+            <input
+                type="text"
+                id="location"
+                name="location"
+                placeholder="e.g. Margao, Goa"
+                autocomplete="address-level2"
+                required
+            >
+
+            <div id="artistFields">
+                <label for="artistCategory">Artist category</label>
+                <select id="artistCategory" name="artistCategory">
+                    <option value="Singer">Singer</option>
+                    <option value="Musician">Musician</option>
+                    <option value="DJ">DJ</option>
+                    <option value="Dancer">Dancer</option>
+                    <option value="Band">Band</option>
+                    <option value="Other artist">Other</option>
+                </select>
+            </div>
+            <div id="venueFields" hidden>
+                <label for="venueType">Venue type</label>
+                <select id="venueType" name="venueType">
+                    <option value="Live music venue">Live music venue</option>
+                    <option value="Restaurant / Cafe">Restaurant / Cafe</option>
+                    <option value="Bar / Club">Bar / Club</option>
+                    <option value="Event space">Event space</option>
+                    <option value="Beach venue">Beach venue</option>
+                    <option value="Other venue">Other</option>
+                </select>
+            </div>
+            <label for="description">Short description</label>
+            <textarea id="description" name="description" maxlength="500" rows="4"
+                placeholder="Tell the community a little about yourself or your venue (optional)"
+                style="width:100%;margin-bottom:19px;padding:12px 14px;border:1px solid var(--border);border-radius:10px;background:#100b18;color:var(--text);font:inherit;font-size:13px;resize:vertical"></textarea>
+            <label for="profileImageUrl">Profile picture image URL (optional)</label>
+            <input type="url" id="profileImageUrl" name="profileImageUrl" placeholder="https://..." maxlength="1000">
+            <div id="venueImageField" hidden>
+                <label for="venueImageUrl">Venue photo image URL (optional)</label>
+                <input type="url" id="venueImageUrl" name="venueImageUrl" placeholder="https://..." maxlength="1000">
+            </div>
+
+            <button type="submit" class="auth-button" id="registerButton">
+                Create Account →
+            </button>
+
+            <p id="formMessage" class="form-message" aria-live="polite"></p>
+        </form>
+
+        <p class="auth-footer">
+            By joining Spotlight, you agree to use the platform respectfully.
+        </p>
+    </section>
+</main>
+
+<script type="module">
+    import { initializeApp } from
+        "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+    import {
+        getAuth,
+        createUserWithEmailAndPassword,
+        updateProfile
+    } from
+        "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    import {
+        getFirestore,
+        doc,
+        setDoc,
+        serverTimestamp
+    } from
+        "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyDLe5UAVUYYfFZxIdaEIqz875uqAT2xEHA",
+        authDomain: "spotlight-430c6.firebaseapp.com",
+        projectId: "spotlight-430c6",
+        storageBucket: "spotlight-430c6.firebasestorage.app",
+        messagingSenderId: "37283174582",
+        appId: "1:37283174582:web:eb0edb53f88786b8ecae17",
+        measurementId: "G-MRHV343K1W"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const form = document.getElementById("registerForm");
+    const message = document.getElementById("formMessage");
+    const submitButton = document.getElementById("registerButton");
+
+    // Show or hide the password.
+    document.querySelectorAll(".password-toggle").forEach(button => {
+        button.addEventListener("click", () => {
+            const input = document.getElementById(
+                button.dataset.passwordTarget
+            );
+
+            const showing = input.type === "password";
+            input.type = showing ? "text" : "password";
+            button.textContent = showing ? "Hide" : "Show";
+            button.setAttribute("aria-label",
+                showing ? "Hide password" : "Show password");
+            button.setAttribute("aria-pressed", String(showing));
+        });
+    });
+
+    // Preselect the account type from the homepage.
+    const params = new URLSearchParams(window.location.search);
+    const selectedType = params.get("type");
+
+    if (["artist", "venue"].includes(selectedType)) {
+        document.getElementById("accountType").value = selectedType;
+    }
+
+    const accountTypeSelect = document.getElementById("accountType");
+    function updateTypeFields() {
+        const isVenue = accountTypeSelect.value === "venue";
+        document.getElementById("artistFields").hidden = isVenue;
+        document.getElementById("venueFields").hidden = !isVenue;
+        document.getElementById("venueImageField").hidden = !isVenue;
+    }
+    accountTypeSelect.addEventListener("change", updateTypeFields);
+    updateTypeFields();
+
+    function showMessage(text, type) {
+        message.textContent = text;
+        message.className = "form-message " + type;
+    }
+
+    function getErrorMessage(error) {
+        const messages = {
+            "auth/email-already-in-use":
+                "This email already has an account. Please log in.",
+            "auth/invalid-email":
+                "Please enter a valid email address.",
+            "auth/weak-password":
+                "Choose a stronger password with at least 6 characters.",
+            "auth/network-request-failed":
+                "Network error. Check your internet connection.",
+            "permission-denied":
+                "Firestore rejected the profile. Please check your database rules.",
+            "auth/operation-not-allowed":
+                "Email/password registration is not enabled in Firebase."
+        };
+
+        return messages[error.code] ||
+            "Registration failed. Please try again. Error: " + error.code;
+    }
+
+    form.addEventListener("submit", async event => {
+        event.preventDefault();
+
+        const fullName =
+            document.getElementById("fullName").value.trim();
+        const email =
+            document.getElementById("email").value.trim();
+        const password =
+            document.getElementById("password").value;
+        const accountType =
+            document.getElementById("accountType").value;
+        const location =
+            document.getElementById("location").value.trim();
+        const artistCategory = document.getElementById("artistCategory").value;
+        const venueType = document.getElementById("venueType").value;
+        const description = document.getElementById("description").value.trim();
+        const profileImageUrl = document.getElementById("profileImageUrl").value.trim();
+        const venueImageUrl = document.getElementById("venueImageUrl").value.trim();
+
+        if (!fullName || !email || !password || !location) {
+            showMessage("Please complete all fields.", "error");
+            return;
+        }
+
+        if (!["artist", "venue"].includes(accountType)) {
+            showMessage("Please select a valid account type.", "error");
+            return;
+        }
+
+        submitButton.disabled = true;
+        submitButton.textContent = "Creating account...";
+
+        try {
+            const credential = await createUserWithEmailAndPassword(
+                auth, email, password
+            );
+
+            const user = credential.user;
+
+            await updateProfile(user, {
+                displayName: fullName
+            });
+
+            await setDoc(doc(db, "users", user.uid), {
+                uid: user.uid,
+                fullName,
+                email: user.email,
+                accountType,
+                location,
+                artistCategory: accountType === "artist" ? artistCategory : "",
+                venueType: accountType === "venue" ? venueType : "",
+                description,
+                profileImageUrl,
+                venueImageUrl: accountType === "venue" ? venueImageUrl : "",
+                createdAt: serverTimestamp()
+            });
+
+            showMessage(
+                "Account created successfully! Redirecting to login...",
+                "success"
+            );
+
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 1500);
+
+        } catch (error) {
+            console.error("Registration error:", error);
+            showMessage(getErrorMessage(error), "error");
+        } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = "Create Account →";
+        }
+    });
+</script>
+
+</body>
+</html>

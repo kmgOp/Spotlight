@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Spotlight | Your Talent. Your Stage.</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="container nav-container">
+
+            <a href="index.html" class="logo">spotlight<span>.</span></a>
+
+            <nav class="nav-links">
+                <a href="#how-it-works">How It Works</a>
+                <a href="#artists">Discover Artists</a>
+                <a href="#venues">For Venues</a>
+            </nav>
+
+            <div class="nav-buttons">
+                <a href="login.html" class="btn btn-outline" id="navLogin">Log In</a>
+                <a href="register.html" class="btn btn-primary" id="navGetStarted">Get Started</a>
+                <a href="artist-dashboard.html" class="btn btn-outline" id="navAccount" hidden>Account</a>
+                <button type="button" class="btn btn-primary" id="navLogout" hidden>Log Out</button>
+            </div>
+
+        </div>
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+    <main>
+
+        <!-- HERO SECTION -->
+        <section class="hero">
+            <div class="container hero-container">
+
+                <div class="hero-content">
+
+                    <div class="hero-badge">
+                        <span class="badge-dot"></span>
+                        MADE FOR THE GOAN CREATIVE COMMUNITY
+                    </div>
+
+                    <h1>
+                        Your talent.<br>
+                        <span>Your stage.</span>
+                    </h1>
+
+                    <p class="hero-description">
+                        A place where artists meet opportunities.
+                        Discover venues, connect with event organisers,
+                        and take your talent to the next stage.
+                    </p>
+
+                    <div class="hero-buttons">
+
+                        <a href="register.html?type=artist" class="btn btn-primary">
+                            I'm an Artist <span class="arrow">→</span>
+                        </a>
+
+                        <a href="register.html?type=venue" class="btn btn-outline">
+                            I'm a Venue
+                        </a>
+
+                    </div>
+
+                    <div class="hero-note">
+                        <span class="mini-glow">●</span>
+                        Connecting Goa's artists and venues
+                    </div>
+
+                </div>
+
+
+                <!-- HERO VISUAL -->
+                <div class="hero-visual">
+
+                    <div class="visual-glow"></div>
+
+                    <div class="main-visual-card">
+
+                        <div class="visual-top">
+                            <span class="visual-label">YOUR NEXT OPPORTUNITY</span>
+                            <span class="visual-icon">◉</span>
+                        </div>
+
+                        <div class="music-symbol">♫</div>
+
+                        <h3>Your talent deserves a stage.</h3>
+
+                        <p>
+                            Find your people. Find your place.
+                            Make something happen.
+                        </p>
+
+                        <div class="visual-bottom">
+                            <span class="visual-line"></span>
+                            <span>SPOTLIGHT COMMUNITY</span>
+                        </div>
+
+                    </div>
+
+
+                    <div class="floating-card floating-card-top">
+                        <div class="floating-icon">♫</div>
+
+                        <div>
+                            <strong>For Artists</strong>
+                            <small>Find your next gig</small>
+                        </div>
+                    </div>
+
+
+                    <div class="floating-card floating-card-bottom">
+                        <div class="floating-icon venue-symbol">◎</div>
+
+                        <div>
+                            <strong>For Venues</strong>
+                            <small>Discover local talent</small>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- COMMUNITY STRIP -->
+        <section class="community-strip">
+            <div class="container community-content">
+
+                <p>ONE COMMUNITY. ENDLESS POSSIBILITIES.</p>
+
+                <div class="community-items">
+                    <span>Musicians</span>
+                    <span class="community-separator">/</span>
+                    <span>Singers</span>
+                    <span class="community-separator">/</span>
+                    <span>Dancers</span>
+                    <span class="community-separator">/</span>
+                    <span>Performers</span>
+                    <span class="community-separator">/</span>
+                    <span>Venues</span>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- HOW IT WORKS -->
+        <section class="features section-padding" id="how-it-works">
+
+            <div class="container">
+
+                <div class="section-heading">
+
+                    <span class="section-label">HOW IT WORKS</span>
+
+                    <h2>
+                        Bringing talent and<br>
+                        <span>opportunity together.</span>
+                    </h2>
+
+                    <p>
+                        Whether you're performing or hosting,
+                        Spotlight helps you make the right connections.
+                    </p>
+
+                </div>
+
+
+                <div class="feature-grid">
+
+                    <!-- ARTIST CARD -->
+                    <article class="feature-card" id="artists">
+
+                        <div class="feature-icon artist-icon">♫</div>
+
+                        <span class="feature-number">01 / FOR ARTISTS</span>
+
+                        <h3>Get your talent noticed.</h3>
+
+                        <p>
+                            Create your artist profile, showcase your skills,
+                            and discover venues looking for performers like you.
+                        </p>
+
+                        <ul class="feature-list">
+                            <li><span>✓</span> Create your profile</li>
+                            <li><span>✓</span> Discover performance opportunities</li>
+                            <li><span>✓</span> Connect with venues</li>
+                        </ul>
+
+                        <a href="register.html?type=artist" class="btn btn-primary">
+                            Explore as an Artist <span class="arrow">→</span>
+                        </a>
+
+                    </article>
+
+
+                    <!-- VENUE CARD -->
+                    <article class="feature-card venue-card" id="venues">
+
+                        <div class="feature-icon venue-icon">◎</div>
+
+                        <span class="feature-number">02 / FOR VENUES</span>
+
+                        <h3>Find your next performer.</h3>
+
+                        <p>
+                            Discover local talent, explore artist profiles,
+                            and connect with performers for your events.
+                        </p>
+
+                        <ul class="feature-list">
+                            <li><span>✓</span> Discover local artists</li>
+                            <li><span>✓</span> Find talent for your events</li>
+                            <li><span>✓</span> Connect with performers</li>
+                        </ul>
+
+                        <a href="register.html?type=venue" class="btn btn-outline">
+                            Explore as a Venue <span class="arrow">→</span>
+                        </a>
+
+                    </article>
+
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- CALL TO ACTION -->
+        <section class="cta-section">
+
+            <div class="container cta-container">
+
+                <div class="cta-content">
+
+                    <span class="section-label">YOUR NEXT CHAPTER STARTS HERE</span>
+
+                    <h2>
+                        Ready to step into<br>
+                        <span>the spotlight?</span>
+                    </h2>
+
+                    <p>
+                        Join a community connecting artists and venues
+                        across Goa.
+                    </p>
+
+                </div>
+
+                <button
+                    type="button"
+                    class="btn btn-primary btn-large"
+                    id="ctaBtn"
+                    onclick="window.location.href='register.html'">
+
+                    Get Started <span class="arrow">→</span>
+
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="footer">
+
+        <div class="container footer-container">
+
+            <div class="footer-brand">
+
+                <a href="index.html" class="logo">spotlight<span>.</span></a>
+
+                <p>Your Talent. Your Stage.</p>
+
+            </div>
+
+
+            <div class="footer-links">
+                <a href="#how-it-works">How It Works</a>
+                <a href="#artists">For Artists</a>
+                <a href="#venues">For Venues</a>
+            </div>
+
+
+            <div class="footer-bottom">
+                <p>© 2026 Spotlight. Made for the creative community in Goa.</p>
+            </div>
+
+        </div>
+
+    </footer>
+
+
+    <!-- JAVASCRIPT -->
+    <script type="module" src="script.js"></script>
+
+</body>
+</html>
